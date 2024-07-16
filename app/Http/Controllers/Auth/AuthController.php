@@ -46,10 +46,12 @@ class AuthController extends Controller
         $message = 'Login successful';
 
         
+
+        if ($request->header('X-API-REQUEST')) {
+            return response()->json(['access_token' => $token, 'token_type' => 'Bearer', 'user' => $user->name, 'message' => $message]);
+        }
         return redirect('/blogs');
 
-        
-        return response()->json(['access_token' => $token, 'token_type' => 'Bearer', 'user' => $user['name'] , 'message' => $message]);
         
     }
 
@@ -63,7 +65,7 @@ class AuthController extends Controller
         
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/blogs');
 
         return response()->json(['message' => 'Logged out'], 200);
